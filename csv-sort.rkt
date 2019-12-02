@@ -30,19 +30,22 @@
 
 ; filter the recipy to get clean data without all the columns
 ; name,id,minutes,contributor_id,submitted,tags,nutrition,n_steps,steps,description,ingredients,n_ingredients
+; read only 10,000 lines
 (define csv-sort
   (lambda (position db leng)
-    (let ([input (file->lines db)])
-      (sort
-                              (filter (lambda
-                                        (entry)
-                                        (and
-                                          (= leng (length entry))
-                                          (string->number (list-ref entry position))))
-                                      (cdr (map split input)))
-                              (lambda
-                                (r1 r2)
-                                (< (string->number (list-ref r1 position)) (string->number (list-ref r2 position))))))))
+    (let ([input (take (file->lines db) 100000)])
+    (let ([content (map split input)])
+      (cons (car content)
+        (sort
+                                (filter (lambda
+                                          (entry)
+                                          (and
+                                            (= leng (length entry))
+                                            (string->number (list-ref entry position))))
+                                        (cdr content))
+                                (lambda
+                                  (r1 r2)
+                                  (< (string->number (list-ref r1 position)) (string->number (list-ref r2 position))))))))))
 
 
 
