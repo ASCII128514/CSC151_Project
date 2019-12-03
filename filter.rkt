@@ -11,5 +11,5 @@
 (define sorted-recipies-output (vector-ref vec 2))
 (define sorted-reviews-output (vector-ref vec 3))
 
-(write-csv (csv-sort 1 recipies 12) sorted-recipies-output)
-(write-csv (csv-sort 1 reviews 5) sorted-reviews-output)
+(write-csv (csv-sort '(1 11) recipies 12) sorted-recipies-output)
+(write-csv (csv-sort '(1) reviews 5) sorted-reviews-output)

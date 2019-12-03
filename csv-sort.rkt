@@ -1,6 +1,14 @@
 #lang racket
 (provide (all-defined-out))
 
+(define all-and
+  (lambda (lst)
+    (letrec ([kernel
+      (lambda (bool bools)
+        (if (null? bools)
+          bool
+          (kernel (and bool (car bools)) (cdr bools))))])
+          (kernel #t lst))))
 (define split
   (lambda (input)
     (letrec ([kernel
@@ -28,10 +36,6 @@
                              (kernel (cadr temp) (append lst (car temp))))])))))])
       (kernel input null))))
 
-(define read-csv
-  (lambda (str)
-    (let ([input (file->lines str)])
-      (map split input))))
 ; filter the recipy to get clean data without all the columns
 ; name,id,minutes,contributor_id,submitted,tags,nutrition,n_steps,steps,description,ingredients,n_ingredients
 ; read only 10,000 lines
@@ -45,11 +49,11 @@
                                           (entry)
                                           (and
                                             (= leng (length entry))
-                                            (string->number (list-ref entry position))))
+                                            (all-and (map (lambda (t) (string->number (list-ref entry t))) position))))
                                         (cdr content))
                                 (lambda
                                   (r1 r2)
-                                  (< (string->number (list-ref r1 position)) (string->number (list-ref r2 position))))))))))
+                                  (< (string->number (list-ref r1 (car position))) (string->number (list-ref r2 (car position)))))))))))
 
 
 
@@ -85,3 +89,9 @@
           (write-line entry output))
         content)
         (close-output-port output))))
+
+
+(define read-csv
+  (lambda (str)
+    (let ([input (file->lines str)])
+      (map split input))))
