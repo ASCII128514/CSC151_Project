@@ -1,6 +1,20 @@
 #lang racket
 (provide (all-defined-out))
 
+;;; Procedure:
+;;;   all-and
+;;; Parameters:
+;;;   lst, a list of values
+;;; Purpose:
+;;;   apply and on all the values in the  list
+;;; Returns:
+;;;   res: boolean, or the last true value in the list
+;;; Preconditions:
+;;;   no additional
+;;; Postconditions:
+;;;  if the list is null, it will return #t
+;;;  res will be #f if there are one or more #f in the list
+;;;  else res will return the last element in the list
 (define all-and
   (lambda (lst)
     (letrec ([kernel
@@ -9,6 +23,21 @@
           bool
           (kernel (and bool (car bools)) (cdr bools))))])
           (kernel #t lst))))
+
+
+;;; Procedure:
+;;;   split
+;;; Parameters:
+;;;   str:string
+;;; Purpose:
+;;;   split a line of csv file into elements
+;;; Returns:
+;;;   lst: list of parsed csv values
+;;; Preconditions:
+;;;   no additional
+;;; Postconditions:
+;;;   split will return the parsed standard csv format in list form.
+;;;   lst will be a list of strings
 (define split
   (lambda (input)
     (letrec ([kernel
@@ -39,6 +68,22 @@
 ; filter the recipy to get clean data without all the columns
 ; name,id,minutes,contributor_id,submitted,tags,nutrition,n_steps,steps,description,ingredients,n_ingredients
 ; read only 10,000 lines
+
+;;; Procedure:
+;;;   csv-sort
+;;; Parameters:
+;;;   position: list of indexes that has to be integer
+;;;   db: file path, string
+;;;   leng: integer, the length of each lists
+;;; Purpose:
+;;;   lst: a list of parsed csv files
+;;; Returns:
+;;;   lst: list of parsed csv values
+;;; Preconditions:
+;;;   no additional
+;;; Postconditions:
+;;;   split will return the parsed standard csv format in list form.
+;;;   lst will be a list of strings
 (define csv-sort
   (lambda (position db leng)
     (let ([input (take (file->lines db) 100000)])
@@ -91,6 +136,18 @@
         (close-output-port output))))
 
 
+;;; Procedure:
+;;;   read-csv
+;;; Parameters:
+;;;   str, a string
+;;; Purpose:
+;;;   read the csv line and parse it into list of list of data
+;;; Returns:
+;;;   lst: list of list of data
+;;; Preconditions:
+;;;   str is the relative file path
+;;; Postconditions:
+;;;   lst will return the parsed csv in standard format
 (define read-csv
   (lambda (str)
     (let ([input (file->lines str)])
